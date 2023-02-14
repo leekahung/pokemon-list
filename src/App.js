@@ -1,14 +1,17 @@
 import "./App.css";
-import pokemon from "./pokemon.json";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import styled from "@emotion/styled";
+import Button from "@mui/material/Button";
 
 const PokemonRow = ({ pokemon, onSelect }) => (
   <tr>
     <td>{pokemon.name.english}</td>
     <td>{pokemon.type.join(", ")}</td>
     <td>
-      <button onClick={() => onSelect(pokemon)}>Select</button>
+      <Button variant="contained" onClick={() => onSelect(pokemon)}>
+        Select
+      </Button>
     </td>
   </tr>
 );
@@ -53,28 +56,45 @@ PokemonInfo.propTypes = {
   }),
 };
 
+const Title = styled.h1`
+  text-align: center;
+`;
+
+const TwoColumnLayout = styled.div`
+  display: grid;
+  grid-template-columns: 70% 30%;
+  grid-column-gap: 1rem;
+`;
+
+const Container = styled.div`
+  margin: auto;
+  padding-top: 1rem;
+  width: 800px;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  font-size: x-large;
+  padding: 0.2rem;
+`;
+
 function App() {
   const [filter, setFilter] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
+  const [pokemon, setPokemon] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:3000/pokemon-list/pokemon.json")
+      .then((response) => response.json())
+      .then((data) => setPokemon(data));
+  }, []);
 
   return (
-    <div
-      style={{
-        margin: "auto",
-        paddingTop: "1rem",
-        width: "800px",
-      }}
-    >
-      <h1 className="title">Pokemon Search</h1>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "70% 30%",
-          gridColumnGap: "1rem",
-        }}
-      >
+    <Container>
+      <Title>Pokemon Search</Title>
+      <TwoColumnLayout>
         <div>
-          <input
+          <Input
             value={filter}
             onChange={(event) => setFilter(event.target.value)}
           />
@@ -104,8 +124,8 @@ function App() {
           </table>
         </div>
         {selectedItem && <PokemonInfo {...selectedItem} />}
-      </div>
-    </div>
+      </TwoColumnLayout>
+    </Container>
   );
 }
 
