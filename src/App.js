@@ -1,4 +1,5 @@
 import "./App.css";
+import pokemon from "./pokemon.json";
 
 function App() {
   return (
