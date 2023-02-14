@@ -30,7 +30,7 @@ function App() {
   const [pokemon, setPokemon] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/pokemon-list/pokemon.json")
+    fetch(`${process.env.PUBLIC_URL}/pokemon.json`)
       .then((response) => response.json())
       .then((data) => setPokemon(data));
   }, []);
