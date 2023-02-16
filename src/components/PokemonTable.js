@@ -12,18 +12,13 @@ const PokemonTable = () => {
         </tr>
       </thead>
       <tbody>
-        {store.pokemon
-          .filter(({ name: { english } }) =>
-            english.toLowerCase().includes(store.filter.toLowerCase())
-          )
-          .slice(0, 20)
-          .map((pokemon) => (
-            <PokemonRow
-              key={pokemon.id}
-              pokemon={pokemon}
-              onSelect={(pokemon) => store.setSelectedPokemon(pokemon)}
-            />
-          ))}
+        {store.filteredPokemon.slice(0, 20).map((pokemon) => (
+          <PokemonRow
+            key={pokemon.id}
+            pokemon={pokemon}
+            onSelect={(pokemon) => store.setSelectedPokemon(pokemon)}
+          />
+        ))}
       </tbody>
     </table>
   );

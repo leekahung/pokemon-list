@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { makeObservable, observable, computed, runInAction } from "mobx";
 
 class Store {
   pokemon = [];
@@ -6,19 +6,36 @@ class Store {
   selectedPokemon = null;
 
   constructor() {
-    makeAutoObservable(this);
+    makeObservable(this, {
+      pokemon: observable,
+      filter: observable,
+      selectedPokemon: observable,
+      filteredPokemon: computed,
+    });
+  }
+
+  get filteredPokemon() {
+    return this.pokemon.filter(({ name: { english } }) =>
+      english.toLowerCase().includes(this.filter.toLowerCase())
+    );
   }
 
   setPokemon(pokemon) {
-    this.pokemon = pokemon;
+    runInAction(() => {
+      this.pokemon = pokemon;
+    });
   }
 
   setFilter(filter) {
-    this.filter = filter;
+    runInAction(() => {
+      this.filter = filter;
+    });
   }
 
   setSelectedPokemon(selectedPokemon) {
-    this.selectedPokemon = selectedPokemon;
+    runInAction(() => {
+      this.selectedPokemon = selectedPokemon;
+    });
   }
 }
 
