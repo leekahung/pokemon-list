@@ -21,4 +21,8 @@ const useStore = create((set) => ({
     })),
 }));
 
+fetch("/pokemon-list/pokemon.json")
+  .then((response) => response.json())
+  .then((pokemon) => useStore.setState((state) => ({ ...state, pokemon })));
+
 export default useStore;
