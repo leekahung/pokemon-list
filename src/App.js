@@ -1,34 +1,11 @@
-import { useEffect, useReducer } from "react";
+import { useEffect } from "react";
 import styled from "@emotion/styled";
+import { useSelector, useDispatch } from "react-redux";
 import "./App.css";
 
 import PokemonInfo from "./components/PokemonInfo";
 import PokemonFilter from "./components/PokemonFilter";
 import PokemonTable from "./components/PokemonTable";
-
-import PokemonContext from "./PokemonContext";
-
-const pokemonReducer = (state, action) => {
-  switch (action.type) {
-    case "SET_FILTER":
-      return {
-        ...state,
-        filter: action.payload,
-      };
-    case "SET_POKEMON":
-      return {
-        ...state,
-        pokemon: action.payload,
-      };
-    case "SET_SELECTED_POKEMON":
-      return {
-        ...state,
-        selectedPokemon: action.payload,
-      };
-    default:
-      throw new Error("No action");
-  }
-};
 
 const Title = styled.h1`
   text-align: center;
@@ -47,11 +24,8 @@ const Container = styled.div`
 `;
 
 function App() {
-  const [state, dispatch] = useReducer(pokemonReducer, {
-    pokemon: [],
-    filter: "",
-    selectedPokemon: null,
-  });
+  const dispatch = useDispatch();
+  const pokemon = useSelector((state) => state.pokemon);
 
   useEffect(() => {
     fetch("/pokemon-list/pokemon.json")
@@ -62,30 +36,23 @@ function App() {
           payload: data,
         })
       );
-  }, []);
+  }, [dispatch]);
 
-  if (!state.pokemon) {
+  if (!pokemon) {
     return <div>Loading data</div>;
   }
 
   return (
-    <PokemonContext.Provider
-      value={{
-        state,
-        dispatch,
-      }}
-    >
-      <Container>
-        <Title>Pokemon Search</Title>
-        <TwoColumnLayout>
-          <div>
-            <PokemonFilter />
-            <PokemonTable />
-          </div>
-          {state.selectedPokemon && <PokemonInfo />}
-        </TwoColumnLayout>
-      </Container>
-    </PokemonContext.Provider>
+    <Container>
+      <Title>Pokemon Search</Title>
+      <TwoColumnLayout>
+        <div>
+          <PokemonFilter />
+          <PokemonTable />
+        </div>
+        <PokemonInfo />
+      </TwoColumnLayout>
+    </Container>
   );
 }
 
