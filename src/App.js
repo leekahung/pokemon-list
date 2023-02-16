@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import styled from "@emotion/styled";
-import { useSelector, useDispatch } from "react-redux";
+import useStore from "./store";
 import "./App.css";
 
 import PokemonInfo from "./components/PokemonInfo";
@@ -24,19 +24,14 @@ const Container = styled.div`
 `;
 
 function App() {
-  const dispatch = useDispatch();
-  const pokemon = useSelector((state) => state.pokemon);
+  const pokemon = useStore((state) => state.pokemon);
+  const setPokemon = useStore((state) => state.setPokemon);
 
   useEffect(() => {
     fetch("/pokemon-list/pokemon.json")
       .then((response) => response.json())
-      .then((data) =>
-        dispatch({
-          type: "SET_POKEMON",
-          payload: data,
-        })
-      );
-  }, [dispatch]);
+      .then((data) => setPokemon(data));
+  }, [setPokemon]);
 
   if (!pokemon) {
     return <div>Loading data</div>;

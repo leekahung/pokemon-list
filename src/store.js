@@ -1,6 +1,24 @@
-import { createStore } from "redux";
-import pokemonReducer from "./reducers/pokemonReducer";
+import { create } from "zustand";
 
-const store = createStore(pokemonReducer);
+const useStore = create((set) => ({
+  pokemon: [],
+  filter: "",
+  selectedPokemon: null,
+  setPokemon: (pokemon) =>
+    set((state) => ({
+      ...state,
+      pokemon,
+    })),
+  setFilter: (filter) =>
+    set((state) => ({
+      ...state,
+      filter,
+    })),
+  setSelectedPokemon: (selectedPokemon) =>
+    set((state) => ({
+      ...state,
+      selectedPokemon,
+    })),
+}));
 
-export default store;
+export default useStore;
